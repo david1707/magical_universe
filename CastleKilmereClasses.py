@@ -3,7 +3,7 @@ class CastleKilmereMember:
     Creates a member of the Castle Kilmere School of Witchcraft and Wizardry
     """
 
-    def __init__(self, name, birthyear, sex):
+    def __init__(self, name: str, birthyear: int, sex: str):
         self._name = name
         self.birthyear = birthyear
         self.sex = sex
@@ -16,12 +16,45 @@ class CastleKilmereMember:
         return CastleKilmereMember('Redmond Dalodore', 1939, 'male')
 
 
+class Professor(CastleKilmereMember):
+    """
+    Creates a Castle Kilmere professor
+    """
+
+    def __init__(self, name: str, birthyear: int, sex: str, subject: str, house=None):
+        super().__init__(name, birthyear, sex)
+        self.subject = subject
+        if house is not None:
+            self.house = house
+
+    @classmethod
+    def mirren(cls):
+        return cls('Miranda Mirren', 1963, 'female', 'Transfiguration', 'House of Courage')
+
+    @classmethod
+    def blade(cls):
+        return cls('Blade Bardock', 1988, 'male', 'Potions', 'House of Ambition')
+
+
+class Ghost(CastleKilmereMember):
+    """
+    Creates a Castle Kilmere ghost
+    """
+
+    def __init__(self, name: str, birthyear: int, sex: str, year_of_death: int, house=None):
+        super().__init__(name, birthyear, sex)
+        self.year_of_death = year_of_death
+
+        if house is not None:
+            self.house = house
+
+
 class Pupil(CastleKilmereMember):
     """
     Create a Castle Kilmere Pupil
     """
 
-    def __init__(self, name, birthyear, sex, house, start_year, pet=None):
+    def __init__(self, name: str, birthyear: int, sex: str, house: str, start_year: int, pet=None):
         super().__init__(name, birthyear, sex)
         self.house = house
         self.start_year = start_year
@@ -53,39 +86,6 @@ class Pupil(CastleKilmereMember):
     @classmethod
     def cassidy(cls):
         return cls('Cassidy Ambergem', 2007, 'female', 'House of Courage', 2018, ('Ramses', 'cat'))
-
-
-class Professor(CastleKilmereMember):
-    """
-    Creates a Castle Kilmere professor
-    """
-
-    def __init__(self, name, birthyear, sex, subject, house=None):
-        super().__init__(name, birthyear, sex)
-        self.subject = subject
-        if house is not None:
-            self.house = house
-
-    @classmethod
-    def mirren(cls):
-        return cls('Miranda Mirren', 1963, 'female', 'Transfiguration', 'House of Courage')
-
-    @classmethod
-    def blade(cls):
-        return cls('Blade Bardock', 1988, 'male', 'Potions', 'House of Ambition')
-
-
-class Ghost(CastleKilmereMember):
-    """
-    Creates a Castle Kilmere ghost
-    """
-
-    def __init__(self, name, birthyear, sex, year_of_death, house=None):
-        super().__init__(name, birthyear, sex)
-        self.year_of_death = year_of_death
-
-        if house is not None:
-            self.house = house
 
 
 if __name__ == "__main__":
