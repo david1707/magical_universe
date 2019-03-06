@@ -8,6 +8,9 @@ class CastleKilmereMember:
         self.birthyear = birthyear
         self.sex = sex
 
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self._name}, birthyear: {self.birthyear})'
+
     def says(self, words):
         return f"{self._name} says {words}"
 
@@ -26,6 +29,9 @@ class Professor(CastleKilmereMember):
         self.subject = subject
         if house is not None:
             self.house = house
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self._name}, birthyear: {self.birthyear}, subject: {self.subject})"
 
     @classmethod
     def mirren(cls):
@@ -47,6 +53,10 @@ class Ghost(CastleKilmereMember):
 
         if house is not None:
             self.house = house
+
+    def __repr__(self):
+        return f'{self.__class__.__name__} ({self._name}, birthyear: {self.birthyear}, year of death:' \
+            f' {self.year_of_death}'
 
 
 class Pupil(CastleKilmereMember):
@@ -75,6 +85,9 @@ class Pupil(CastleKilmereMember):
             'Potions': False,
             'Transfiguration': False}
 
+    def __repr__(self):
+        return f'{self.__class__.__name__} ({self._name}, birthyear: {self.birthyear}, house: {self.house})'
+
     @classmethod
     def cleon(cls):
         return cls('Cleon Bery', 2008, 'male', 'House of Courage', 2018, ('Cotton', 'owl'))
@@ -90,6 +103,7 @@ class Pupil(CastleKilmereMember):
 
 if __name__ == "__main__":
     bromley = CastleKilmereMember(name='Bromley Huckabee', birthyear=1959, sex='male')
+    print(bromley)
     cleon = Pupil(name='Cleon Bery', birthyear=2008, house='House of Courage', start_year=2018, sex='male')
     headmaster = cleon.school_headmaster()
 
