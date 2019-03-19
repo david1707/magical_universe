@@ -1,3 +1,5 @@
+import datetime
+
 class CastleKilmereMember:
     """
     Creates a member of the Castle Kilmere School of Witchcraft and Wizardry
@@ -8,15 +10,24 @@ class CastleKilmereMember:
         self.birthyear = birthyear
         self.sex = sex
 
-    def __repr__(self):
-        return f'{self.__class__.__name__}({self._name}, birthyear: {self.birthyear})'
-
     def says(self, words):
         return f"{self._name} says {words}"
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def age(self):
+        now = datetime.datetime.now().year
+        return now - self.birthyear
 
     @staticmethod
     def school_headmaster():
         return CastleKilmereMember('Redmond Dalodore', 1939, 'male')
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self._name}, birthyear: {self.birthyear})'
 
 
 class Professor(CastleKilmereMember):
@@ -30,9 +41,6 @@ class Professor(CastleKilmereMember):
         if house is not None:
             self.house = house
 
-    def __repr__(self):
-        return f"{self.__class__.__name__}({self._name}, birthyear: {self.birthyear}, subject: {self.subject})"
-
     @classmethod
     def mirren(cls):
         return cls('Miranda Mirren', 1963, 'female', 'Transfiguration', 'House of Courage')
@@ -40,6 +48,9 @@ class Professor(CastleKilmereMember):
     @classmethod
     def blade(cls):
         return cls('Blade Bardock', 1988, 'male', 'Potions', 'House of Ambition')
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self._name}, birthyear: {self.birthyear}, subject: {self.subject})"
 
 
 class Ghost(CastleKilmereMember):
@@ -54,9 +65,18 @@ class Ghost(CastleKilmereMember):
         if house is not None:
             self.house = house
 
+    @property
+    def age(self):
+        now = datetime.datetime.now().year
+        return now - self.birthyear
+
     def __repr__(self):
         return f'{self.__class__.__name__} ({self._name}, birthyear: {self.birthyear}, year of death:' \
             f' {self.year_of_death}'
+
+    @classmethod
+    def mocking_knight(cls):
+        return cls('The Mocking Knight', 1401, 'male', 1492, 'House of Courage')
 
 
 class Pupil(CastleKilmereMember):
@@ -85,6 +105,8 @@ class Pupil(CastleKilmereMember):
             'Potions': False,
             'Transfiguration': False}
 
+        self._friends = []
+
     def __repr__(self):
         return f'{self.__class__.__name__} ({self._name}, birthyear: {self.birthyear}, house: {self.house})'
 
@@ -99,6 +121,100 @@ class Pupil(CastleKilmereMember):
     @classmethod
     def cassidy(cls):
         return cls('Cassidy Ambergem', 2007, 'female', 'House of Courage', 2018, ('Ramses', 'cat'))
+
+    @classmethod
+    def adrien(cls):
+        return cls('Adrien Fulford', 2008, 'male', 'House of Ambition', 2018, ('Unnamed', 'owl'))
+
+    @property
+    def current_year(self):
+        now = datetime.datetime.now().year
+        return (now - self.start_year) + 1
+
+    @property
+    def elms(self):
+        return self._elms
+
+    @property
+    def friends(self):
+        return f"{self._name}'s current friends are: {[person.name for person in self._friends]}"
+
+    @elms.setter
+    def elms(self, subject_and_grade):
+
+        try:
+            subject, grade = subject_and_grade
+        except ValueError:
+            raise ValueError("Pass and iterable with two items: Subject and grade")
+
+        passed = self.passed(grade)
+
+        if passed:
+            self._elms[subject] = True
+        else:
+            print('The exam was not passed so no ELM was awarded')
+
+    @elms.deleter
+    def elms(self):
+        print("Caution, you are deleting this students' ELM's! You should only do that if she/he dropped out of "
+              "school without passing any exam")
+        del self._elms
+
+    @staticmethod
+    def passed(grade):
+        """
+            Given a grade, determine if an exam was passed
+        """
+        grades = {
+            'E': True,
+            'Exceptional': True,
+            'G': True,
+            'Good': True,
+            'A': True,
+            'Acceptable': True,
+            'P': False,
+            'Poor': False,
+            'H': False,
+            'Horrible': False,
+        }
+
+        return grades.get(grade, False)
+
+    def befriend(self, person):
+        """"
+            Adds another person to your list of friends
+        """
+        if (person.__class__.__name__ != 'CastleKilmereMember'
+            and self.house != 'House of Ambition'
+            and person.house == 'House of Ambition'):
+            print("Are you sure you want to be friends with someone from House of Ambition?")
+
+        self._friends.append(person)
+        print(f"{person.name} is now your friend!")
+
+    def __repr__(self):
+        return (f"{self.__class__.__name__}"
+                f"({self._name}, birthyear: {self.birthyear}, house: {self.house})")
+
+
+class Charm:
+    """
+        Creates a charm
+    """
+    def __init__(self, incantation: str, difficulty: str = None, effect: str = None):
+        self.incantation = incantation
+        self.difficulty = difficulty
+        self.effect = effect
+
+    def cast(self):
+        print(f"{self.incantation}!")
+
+    @classmethod
+    def stuporus_ratiato(cls):
+        return cls('Stuporus Ratiato', "Simple", "Makes objects fly")
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.incantation}, {self.difficulty}, {self.effect})"
 
 
 if __name__ == "__main__":
