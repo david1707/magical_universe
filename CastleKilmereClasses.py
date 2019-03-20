@@ -1,5 +1,6 @@
 import datetime
 
+
 class CastleKilmereMember:
     """
     Creates a member of the Castle Kilmere School of Witchcraft and Wizardry
@@ -9,6 +10,29 @@ class CastleKilmereMember:
         self._name = name
         self.birthyear = birthyear
         self.sex = sex
+        self._traits = {}
+
+    def add_trait(self, trait, value=True):
+        self._traits[trait] = value
+
+    def print_traits(self):
+        true_traits = [trait for trait, value in self._traits.items() if value]
+        false_traits = [trait for trait, value in self._traits.items() if not value]
+
+        print(f"{self._name} is {', '.join(true_traits)} "
+              f"but not {', '.join(false_traits)}")
+
+    def exhibits_trait(self, trait):
+        try:
+            value = self._traits[trait]
+        except KeyError:
+            print(f"{self._name} does not have a character trait with the name '{trait}'")
+            return
+
+        if value:
+            print(f"Yes, {self._name} is {trait}")
+        else:
+            print(f"No, {self._name} is not {trait}")
 
     def says(self, words):
         return f"{self._name} says {words}"
@@ -186,15 +210,11 @@ class Pupil(CastleKilmereMember):
         """
         if (person.__class__.__name__ != 'CastleKilmereMember'
             and self.house != 'House of Ambition'
-            and person.house == 'House of Ambition'):
+                and person.house == 'House of Ambition'):
             print("Are you sure you want to be friends with someone from House of Ambition?")
 
         self._friends.append(person)
         print(f"{person.name} is now your friend!")
-
-    def __repr__(self):
-        return (f"{self.__class__.__name__}"
-                f"({self._name}, birthyear: {self.birthyear}, house: {self.house})")
 
 
 class Charm:
@@ -219,12 +239,8 @@ class Charm:
 
 if __name__ == "__main__":
     bromley = CastleKilmereMember(name='Bromley Huckabee', birthyear=1959, sex='male')
-    print(bromley)
-    cleon = Pupil(name='Cleon Bery', birthyear=2008, house='House of Courage', start_year=2018, sex='male')
-    headmaster = cleon.school_headmaster()
+    bromley.add_trait('kind')
+    bromley.add_trait('tidy-minded')
+    bromley.add_trait('impatient', value=False)
 
-    mirren = Professor.mirren()
-    blade = Professor.blade()
-    cleon = Pupil.cleon()
-    flynn = Pupil.flynn()
-    cassidy = Pupil.cassidy()
+    bromley.print_traits()
