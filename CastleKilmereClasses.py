@@ -1,4 +1,18 @@
 import datetime
+from typing import NamedTuple
+
+
+class DarkArmyMember(NamedTuple):
+    name: str
+    birthyear: str
+
+    @property
+    def leader(self):
+        lord_odon = DarkArmyMember('Lord Odon', 1971)
+        return lord_odon
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self.name}, birthyear: {self.birthyear})'
 
 
 class CastleKilmereMember:
@@ -244,3 +258,7 @@ if __name__ == "__main__":
     bromley.add_trait('impatient', value=False)
 
     bromley.print_traits()
+
+    keres = DarkArmyMember('Keres Fulford', 1983)
+    print('Keres: ', keres)
+    print('Leader: ', keres.leader)
