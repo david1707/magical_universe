@@ -1,5 +1,42 @@
-import datetime
+from abc import ABCMeta, abstractmethod
 from typing import NamedTuple
+import datetime
+
+
+class Spell(metaclass=ABCMeta):
+    """
+    Creates a spell
+    """
+    def __init__(self, name: str, incantation: str, effect: str):
+        self.name = name
+        self.incantation = incantation
+        self.effect = effect
+
+    @abstractmethod
+    def cast(self):
+        pass
+
+    @property
+    @abstractmethod
+    def defining_feature(self):
+        pass
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self.name}, incantation: {self.incantation}, effect: {self.effect})'
+
+
+class Charm(Spell):
+    def __init__(self, name:str, incantation: str, effect: str, difficulty: str=None, min_year: int=None):
+        super().__init__(name, incantation, effect)
+        self.difficulty = difficulty
+        self.min_year = min_year
+
+    @property
+    def defining_feature(self):
+        return "Alteration of the object's inherent qualities, that is, its behaviour and capabilities"
+
+    def cast(self):
+        print(f'{self.incantation}')
 
 
 class DarkArmyMember(NamedTuple):
@@ -231,26 +268,6 @@ class Pupil(CastleKilmereMember):
         print(f"{person.name} is now your friend!")
 
 
-class Charm:
-    """
-        Creates a charm
-    """
-    def __init__(self, incantation: str, difficulty: str = None, effect: str = None):
-        self.incantation = incantation
-        self.difficulty = difficulty
-        self.effect = effect
-
-    def cast(self):
-        print(f"{self.incantation}!")
-
-    @classmethod
-    def stuporus_ratiato(cls):
-        return cls('Stuporus Ratiato', "Simple", "Makes objects fly")
-
-    def __repr__(self):
-        return f"{self.__class__.__name__}({self.incantation}, {self.difficulty}, {self.effect})"
-
-
 if __name__ == "__main__":
     bromley = CastleKilmereMember(name='Bromley Huckabee', birthyear=1959, sex='male')
     bromley.add_trait('kind')
@@ -262,3 +279,6 @@ if __name__ == "__main__":
     keres = DarkArmyMember('Keres Fulford', 1983)
     print('Keres: ', keres)
     print('Leader: ', keres.leader)
+
+    charm = Charm('Stuporus Ratiato', 'Stuporus Ratiato', 'Makes objects fly', 'simple')
+    print(charm)
