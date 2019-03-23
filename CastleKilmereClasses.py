@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from dataclasses import dataclass
 from typing import NamedTuple
 import datetime
 
@@ -7,6 +8,7 @@ class Spell(metaclass=ABCMeta):
     """
     Creates a spell
     """
+
     def __init__(self, name: str, incantation: str, effect: str):
         self.name = name
         self.incantation = incantation
@@ -26,7 +28,7 @@ class Spell(metaclass=ABCMeta):
 
 
 class Charm(Spell):
-    def __init__(self, name:str, incantation: str, effect: str, difficulty: str=None, min_year: int=None):
+    def __init__(self, name: str, incantation: str, effect: str, difficulty: str = None, min_year: int = None):
         super().__init__(name, incantation, effect)
         self.difficulty = difficulty
         self.min_year = min_year
@@ -260,12 +262,25 @@ class Pupil(CastleKilmereMember):
             Adds another person to your list of friends
         """
         if (person.__class__.__name__ != 'CastleKilmereMember'
-            and self.house != 'House of Ambition'
+                and self.house != 'House of Ambition'
                 and person.house == 'House of Ambition'):
             print("Are you sure you want to be friends with someone from House of Ambition?")
 
         self._friends.append(person)
         print(f"{person.name} is now your friend!")
+
+
+@dataclass # Dataclass decorator added on Python 3.7. It adds serveral special methods such as __init__()
+class House:
+    name: str
+    traits: list
+    head: Professor
+    ghost: Ghost
+    founded_in: int = 991
+
+    def current_age(self):
+        now = datetime.datetime.now().year
+        return (now - self.founded_in) + 1
 
 
 if __name__ == "__main__":
@@ -282,3 +297,13 @@ if __name__ == "__main__":
 
     charm = Charm('Stuporus Ratiato', 'Stuporus Ratiato', 'Makes objects fly', 'simple')
     print(charm)
+
+    house_of_courage = House('House of Courage', ['bravery', 'nerve', 'courage'])
+    print(house_of_courage)
+
+    house_of_loyalty = House('House of Loyalty', ['loyalty', 'fairness', 'patience', 'kindness'])
+    print(house_of_loyalty)
+
+    print(house_of_courage == house_of_loyalty)
+    print(house_of_courage == house_of_courage)
+
