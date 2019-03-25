@@ -40,7 +40,6 @@ class Charm(Spell):
     def cast(self):
         print(f'{self.incantation}')
 
-
 class DarkArmyMember(NamedTuple):
     name: str
     birthyear: str
@@ -50,8 +49,24 @@ class DarkArmyMember(NamedTuple):
         lord_odon = DarkArmyMember('Lord Odon', 1971)
         return lord_odon
 
-    def __repr__(self):
-        return f'{self.__class__.__name__}({self.name}, birthyear: {self.birthyear})'
+    def cast(self, spell):
+        print(f"{self.name}: {spell.incantation}!")
+
+
+@dataclass(frozen=True)
+class NewDarkArmyMember():
+    """ Creates a death eater """
+    name: str
+    birthyear: str
+
+    @property
+    def leader(self):
+        lord_odon = DarkArmyMember('Lord Odon', 1971)
+        return lord_odon
+
+    def cast(self, spell):
+        print(f"{self.name}: {spell.incantation}!")
+
 
 
 class CastleKilmereMember:
@@ -291,19 +306,10 @@ if __name__ == "__main__":
 
     bromley.print_traits()
 
-    keres = DarkArmyMember('Keres Fulford', 1983)
-    print('Keres: ', keres)
-    print('Leader: ', keres.leader)
+    keres = NewDarkArmyMember('Keres Fulford', 1983)
+    print(keres)
 
     charm = Charm('Stuporus Ratiato', 'Stuporus Ratiato', 'Makes objects fly', 'simple')
-    print(charm)
 
-    house_of_courage = House('House of Courage', ['bravery', 'nerve', 'courage'])
-    print(house_of_courage)
 
-    house_of_loyalty = House('House of Loyalty', ['loyalty', 'fairness', 'patience', 'kindness'])
-    print(house_of_loyalty)
-
-    print(house_of_courage == house_of_loyalty)
-    print(house_of_courage == house_of_courage)
 
