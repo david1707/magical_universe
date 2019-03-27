@@ -102,8 +102,17 @@ class CastleKilmereMember:
         else:
             print(f"No, {self._name} is not {trait}")
 
+    def whisper(function):
+        def wrapper(self, *args):
+            original_output = function(self, *args)
+            first_part, words = original_output.split('says: ')
+            words = words.replace('!', '...')
+            return f"{first_part}says: {words}"
+        return wrapper
+
+    @whisper
     def says(self, words):
-        return f"{self._name} says {words}"
+        return f"{self._name} says: {words}"
 
     @property
     def name(self):
@@ -176,10 +185,11 @@ class Pupil(CastleKilmereMember):
     Create a Castle Kilmere Pupil
     """
 
-    def __init__(self, name: str, birthyear: int, sex: str, house: str, start_year: int, pet=None):
+    def __init__(self, name: str, birthyear: int, sex: str, house: str, start_year: int, pet: tuple=None):
         super().__init__(name, birthyear, sex)
         self.house = house
         self.start_year = start_year
+        self.known_spells = set()
 
         if pet is not None:
             self.pet_name, self.pet_type = pet
@@ -196,8 +206,6 @@ class Pupil(CastleKilmereMember):
             'History of Magic': False,
             'Potions': False,
             'Transfiguration': False}
-
-        self._friends = []
 
     def __repr__(self):
         return f'{self.__class__.__name__} ({self._name}, birthyear: {self.birthyear}, house: {self.house})'
@@ -217,6 +225,10 @@ class Pupil(CastleKilmereMember):
     @classmethod
     def adrien(cls):
         return cls('Adrien Fulford', 2008, 'male', 'House of Ambition', 2018, ('Unnamed', 'owl'))
+
+    @classmethod
+    def ginny(cls):
+        return cls('Aurora Gibbs', 2009, 'female', 'House of Courage', start_year=2019)
 
     @property
     def current_year(self):
@@ -307,9 +319,11 @@ if __name__ == "__main__":
     bromley.print_traits()
 
     keres = NewDarkArmyMember('Keres Fulford', 1983)
-    print(keres)
 
     charm = Charm('Stuporus Ratiato', 'Stuporus Ratiato', 'Makes objects fly', 'simple')
+
+    aurora = Pupil.ginny()
+    print(aurora.says('Be careful Quintos!'))
 
 
 
