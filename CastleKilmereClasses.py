@@ -127,6 +127,11 @@ class CastleKilmereMember:
     def school_headmaster():
         return CastleKilmereMember('Redmond Dalodore', 1939, 'male')
 
+    def write_letter(self, recipient, content):
+        letter_name = f'dear_{recipient}.txt'
+        with Letter(letter_name) as l:
+            l.write(content)
+
     def __repr__(self):
         return f'{self.__class__.__name__}({self._name}, birthyear: {self.birthyear})'
 
@@ -185,7 +190,7 @@ class Pupil(CastleKilmereMember):
     Create a Castle Kilmere Pupil
     """
 
-    def __init__(self, name: str, birthyear: int, sex: str, house: str, start_year: int, pet: tuple=None):
+    def __init__(self, name: str, birthyear: int, sex: str, house: str, start_year: int, pet: tuple = None):
         super().__init__(name, birthyear, sex)
         self.house = house
         self.start_year = start_year
@@ -297,7 +302,7 @@ class Pupil(CastleKilmereMember):
         print(f"{person.name} is now your friend!")
 
 
-@dataclass # Dataclass decorator added on Python 3.7. It adds serveral special methods such as __init__()
+@dataclass # Dataclass decorator added on Python 3.7. It adds several special methods such as __init__()
 class House:
     name: str
     traits: list
@@ -310,20 +315,26 @@ class House:
         return (now - self.founded_in) + 1
 
 
+class Letter:
+    total_number_of_letters = 0
+
+    def __init__(self, letter_name):
+        self.letter_name = letter_name
+        self.__class__.total_number_of_letters += 1
+
+    def __enter__(self):
+        self.letter = open(self.letter_name, 'w')
+        return self.letter
+
+    def __exit__(self, exc_type, exc_value, tracebak):
+        if self.letter:
+            self.letter.close()
+
+
 if __name__ == "__main__":
-    bromley = CastleKilmereMember(name='Bromley Huckabee', birthyear=1959, sex='male')
-    bromley.add_trait('kind')
-    bromley.add_trait('tidy-minded')
-    bromley.add_trait('impatient', value=False)
+    cleon = Pupil.cleon()
 
-    bromley.print_traits()
+    letter_content = "Hi Bromley! \n Can Flynn, Cassidy and I stop by for a tea this afternoon?\nCleon"
+    cleon.write_letter('Bromley', letter_content)
 
-    keres = NewDarkArmyMember('Keres Fulford', 1983)
-
-    charm = Charm('Stuporus Ratiato', 'Stuporus Ratiato', 'Makes objects fly', 'simple')
-
-    aurora = Pupil.ginny()
-    print(aurora.says('Be careful Quintos!'))
-
-
-
+    print(f'Total number of letter creates so far: {Letter.total_number_of_letters}')
